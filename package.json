@@ -1,0 +1,45 @@
+{
+  "name": "commander-file",
+  "main": "commander-file",
+  "version": "0.0.0",
+  "description": "Wait the stdin/file by extended commander",
+
+  "scripts": {
+    "test": "jasminetea test --watch",
+    "test": "jasminetea test --cover --report"
+  },
+  "dependencies": {
+    "commander": "^2.8.1"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.9.2",
+    "jasminetea": "^0.1.30-rc.3"
+  },
+
+  "keywords": [
+    "commander",
+    "promise",
+    "stdin",
+    "file"
+  ],
+  "file":[
+    "commander-file",
+    "lib"
+  ],
+  "directories": {
+    "lib": "lib",
+    "test": "test",
+    "example": "test/example"
+  },
+
+  "author": "59naga <i59naga@icloud.com> (http://berabou.me/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/59naga/commander-file.git"
+  },
+  "bugs": {
+    "url": "https://github.com/59naga/commander-file/issues"
+  },
+  "homepage": "https://github.com/59naga/commander-file"
+}
