@@ -27,15 +27,15 @@ __Can read stdin/file/url to `fileData`__.
 
 ### Stdin
 ```bash
-$ echo -n 'foo' > bar.txt
-$ node my-program bar.txt
-# foo
+$ echo -n 'bar' | node my-program
+# bar
 ```
 
 ### File
 ```bash
-$ echo -n 'bar' | node my-program
-# bar
+$ echo -n 'foo' > bar.txt
+$ node my-program bar.txt
+# foo
 ```
 
 > Parsing only first argument.
