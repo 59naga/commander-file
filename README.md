@@ -21,9 +21,9 @@ var program = require('commander-file');
 
 program
   .usage('[options] <file ...>')
-  .parse(process.argv);
-.then(function(program){
-  console.log(program.args[0]);
+  .parse(process.argv)
+  .then(function(program){
+    console.log(program.args[0]);
 });
 ```
 
