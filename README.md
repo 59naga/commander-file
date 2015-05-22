@@ -54,9 +54,9 @@ License
 
 [License]: http://59naga.mit-license.org/
 
-[npm-image]:https://img.shields.io/npm/v/json_ml.svg?style=flat-square
-[npm]: https://npmjs.org/package/json_ml
-[travis-image]: http://img.shields.io/travis/59naga/json-ml.svg?style=flat-square
-[travis]: https://travis-ci.org/59naga/json-ml
-[coveralls-image]: http://img.shields.io/coveralls/59naga/json-ml.svg?style=flat-square
-[coveralls]: https://coveralls.io/r/59naga/json-ml?branch=master
+[npm-image]:https://img.shields.io/npm/v/commander-file.svg?style=flat-square
+[npm]: https://npmjs.org/package/commander-file
+[travis-image]: http://img.shields.io/travis/59naga/commander-file.svg?style=flat-square
+[travis]: https://travis-ci.org/59naga/commander-file
+[coveralls-image]: http://img.shields.io/coveralls/59naga/commander-file.svg?style=flat-square
+[coveralls]: https://coveralls.io/r/59naga/commander-file?branch=master
