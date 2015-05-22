@@ -1,6 +1,6 @@
 {
   "name": "commander-file",
-  "version": "0.0.0-alpha.0",
+  "version": "0.0.0-alpha.1",
   "description": "Wait the stdin/file/uri by extended commander",
 
   "scripts": {
@@ -50,8 +50,7 @@
   ],
   "directories": {
     "lib": "lib",
-    "test": "test",
-    "example": "test/example"
+    "test": "test"
   },
 
   "author": "59naga <i59naga@icloud.com> (http://berabou.me/)",
