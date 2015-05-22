@@ -4,7 +4,7 @@
   "description": "Wait the stdin/file/uri by extended commander",
 
   "scripts": {
-    "cover": "jasminetea test --verbose --cover --report --timeout 2000",
+    "cover": "jasminetea test --verbose --cover --report --timeout 1000",
 
     "Developer commands":"",
       "start": "$(jqn package scripts.cover) --watch",

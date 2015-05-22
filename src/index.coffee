@@ -47,7 +47,7 @@ class CommandFile extends Command
       if isUri and @config.uri
         uri= @args[0]
 
-        request uri,timeout:@config.timeout
+        request uri
         .spread (response,body)->
           body
 
