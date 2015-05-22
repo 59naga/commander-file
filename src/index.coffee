@@ -1,42 +1,71 @@
 # Dependencies
 Command= (require 'commander').Command
 Promise= require 'bluebird'
+request= Promise.promisify(require 'request')
 
+readFile= Promise.promisify (require 'fs').readFile
+path= require 'path'
+
+# Public
 class CommandFile extends Command
-  constructor: (argv,@options={})->
+  constructor: (@config={})->
     super
 
-    @options.timeout?= 500
-    @options.encoding?= 'utf8'
-
-    @parse argv
+    @config.uri?= on
+    @config.file?= on
+    @config.stdin?= on
+    @config.timeout?= 500
 
   parse: ->
-    new Promise (resolve)=>
-      process.stdin.resume()
-      process.stdin.setEncoding @options.encoding
+    super
 
-      data= ''
-      process.stdin.on 'data',(chunk)-> data+= chunk
-      process.stdin.on 'end',->
-        resolve data
+    first= @args[0]?
 
-      process.stdin.on 'data',-> clearTimeout timeoutId
-      timeoutId= setTimeout (->resolve data),@timeout
+    if @config.stdin and not first
+      promise= new Promise (resolve)=>
+        process.stdin.resume()
+        process.stdin.setEncoding 'utf8'
 
+        data= ''
+        process.stdin.on 'data',(chunk)-> data+= chunk
+        process.stdin.on 'end',->
+          resolve data
+
+        process.stdin.on 'data',-> clearTimeout timeoutId
+        timeoutId= setTimeout (->resolve null),@timeout
+    else
+      promise= Promise.resolve null
+
+    promise
     .then (data)=>
       process.stdin.pause()
 
-      fileRequest= not file and @args.length
-      if fileRequest
-        filePath= path.resolve process.cwd(),@args.shift()
-        if @options.encoding?
-          data= fs.readFileSync filePath,@options.encoding
-        else
-          data= fs.readFileSync filePath
+      return data if data?
+      return null unless first
 
-      @args.unshift data 
+      isUri= @args[0].match /^https?:\/\//
+      if isUri and @config.uri
+        uri= @args.shift()
+
+        request uri,timeout:@config.timeout
+        .spread (response,body)->
+          body
+
+      else if @config.file
+        filePath= path.resolve process.cwd(),@args.shift()
+
+        readFile filePath,'utf8'
+
+      else
+        null
+
+    .then (data)=>
+      @args.unshift data if data?
+      @args
+
+    .then =>
 
       this
 
-module.exports= CommandFile
+module.exports= new CommandFile
+module.exports.CommandFile= CommandFile
