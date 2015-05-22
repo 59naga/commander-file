@@ -7,46 +7,46 @@
 $ npm install commander-file
 ```
 
-## Upgrade option parsing
-./my_program.js:
+# Upgrade option parsing
 
+my-program:
 ```js
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
 var program = require('commander-file');
-
 program
-  .usage('[options] <file ...>')
-  .parse(process.argv)
-  .then(function(program){
-    console.log(program.args[0]);
+.usage('[options] [file]')
+.parse(process.argv).then(function(fileData){
+  console.log(fileData);
 });
 ```
 
-__Pass to args[0] by stdin/file/url to__.
+## Example
+
+__Can read stdin/file/url to `fileData`__.
 
 ### Stdin
 ```bash
 $ echo -n 'foo' > bar.txt
-$ node ./my_program.js bar.txt
+$ node my-program bar.txt
 # foo
 ```
 
 ### File
 ```bash
-$ echo -n 'bar' | node ./my_program.js
+$ echo -n 'bar' | node my-program
 # bar
 ```
 
+> Parsing only first argument.
+
 ### Uri
 ```bash
-$ node ./my_program.js http://static.edgy.black/fixture.txt
+$ node my-program http://static.edgy.black/fixture.txt
 # baz
 ```
+
+> Parsing only first argument.
 
 License
 ---

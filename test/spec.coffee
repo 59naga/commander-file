@@ -20,10 +20,9 @@ describe 'CommandFile',->
     argv= command []
 
     program= require '../src'
-    program.parse(argv).then (result)->
+    program.parse(argv).then (data)->
 
-      expect(result).toBe program
-      expect(result.args).toEqual ['foo']
+      expect(data).toBe 'foo'
       done()
 
   describe 'All accepts',->
@@ -32,9 +31,9 @@ describe 'CommandFile',->
       argv= command []
 
       program= new CommandFile
-      program.parse(argv).then ->
+      program.parse(argv).then (data)->
 
-        expect(program.args).toEqual ['foo']
+        expect(data).toEqual 'foo'
         done()
 
     it 'file', (done)->
@@ -42,9 +41,9 @@ describe 'CommandFile',->
       argv= command ['test/fixture.txt']
 
       program= new CommandFile
-      program.parse(argv).then ->
+      program.parse(argv).then (data)->
 
-        expect(program.args).toEqual ['bar']
+        expect(data).toEqual 'bar'
         done()
 
     it 'url', (done)->
@@ -52,27 +51,28 @@ describe 'CommandFile',->
       argv= command ['http://static.edgy.black/fixture.txt']
 
       program= new CommandFile
-      program.parse(argv).then ->
+      program.parse(argv).then (data)->
 
-        expect(program.args).toEqual ['baz\n']
+        expect(data).toEqual 'baz\n'
         done()
 
-    it 'timeout 500ms', (done)->
+  describe 'options',->
+    it 'timeout 1 sec', (done)->
       stdin ''
       argv= command ['https://static.edgy.black/fixture.txt']
 
       program= new CommandFile
-      program.parse(argv).catch Error,(error)->
+      program.parse(argv).catch (error)->
 
-        expect(error.message).toBe 'ETIMEDOUT'
+        expect(error instanceof Error).toBe true
         done()
 
-  it 'All denny( ≈ commander)',(done)->
-    stdin 'foo'
-    argv= command ['test/fixture.txt']
+    it 'All denny( ≈ commander)',(done)->
+      stdin 'foo'
+      argv= command ['test/fixture.txt']
 
-    program= new CommandFile {uri:off,file:off,stdin:off}
-    program.parse(argv).then ->
+      program= new CommandFile {uri:off,file:off,stdin:off}
+      program.parse(argv).then (data)->
 
-      expect(program.args).toEqual ['test/fixture.txt']
-      done()
+        expect(data).toEqual null
+        done()

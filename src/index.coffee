@@ -45,27 +45,19 @@ class CommandFile extends Command
 
       isUri= @args[0].match /^https?:\/\//
       if isUri and @config.uri
-        uri= @args.shift()
+        uri= @args[0]
 
         request uri,timeout:@config.timeout
         .spread (response,body)->
           body
 
       else if @config.file
-        filePath= path.resolve process.cwd(),@args.shift()
+        filePath= path.resolve process.cwd(),@args[0]
 
         readFile filePath,'utf8'
 
       else
         null
-
-    .then (data)=>
-      @args.unshift data if data?
-      @args
-
-    .then =>
-
-      this
 
 module.exports= new CommandFile
 module.exports.CommandFile= CommandFile
