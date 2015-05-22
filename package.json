@@ -25,6 +25,7 @@
     }
   },
   "files": [
+    ".npmignore",
     "index.js",
     "lib"
   ],
