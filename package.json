@@ -4,7 +4,7 @@
   "description": "Receive stdin/file/uri at commander",
 
   "scripts": {
-    "cover": "jasminetea test --verbose --cover --report --timeout 1000",
+    "cover": "jasminetea test --verbose --cover --report --timeout 2000",
 
     "Developer commands":"",
       "start": "$(jqn package scripts.cover) --watch",
