@@ -13,7 +13,7 @@ class CommandFile extends Command
     super
 
     @config.stdin?= on
-    @config.stdinTimeout?= 1000
+    @config.stdinTimeout?= 500
 
     @config.file?= on
     @config.fileExtension?= ''
@@ -38,7 +38,7 @@ class CommandFile extends Command
             resolve data
 
           process.stdin.on 'data',-> clearTimeout timeoutId
-          timeoutId= setTimeout (->resolve null),@stdinTimeout
+          timeoutId= setTimeout (->resolve null),@config.stdinTimeout
       else
         Promise.resolve null
 
@@ -47,7 +47,7 @@ class CommandFile extends Command
 
       firstArg= @args[0]
 
-      return data if data?
+      return data if data? and data.length
       return null unless firstArg
 
       @args.shift() if @config.alignStaffArguments
