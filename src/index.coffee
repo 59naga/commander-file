@@ -3,58 +3,76 @@ Command= (require 'commander').Command
 Promise= require 'bluebird'
 request= Promise.promisify(require 'request')
 
-readFile= Promise.promisify (require 'fs').readFile
+fs= require 'fs'
 path= require 'path'
+readFileAsync= Promise.promisify fs.readFile
 
 # Public
 class CommandFile extends Command
   constructor: (@config={})->
     super
 
-    @config.uri?= on
-    @config.file?= on
     @config.stdin?= on
-    @config.timeout?= 500
+    @config.stdinTimeout?= 500
+
+    @config.file?= on
+    @config.fileExtension?= ''
+
+    @config.uri?= on
+    @config.uriTimeout?= 0
+
+    @config.alignStaffArguments?= on
 
   parse: ->
     super
 
-    first= @args[0]?
+    stdin=
+      if @config.stdin
+        new Promise (resolve)=>
+          process.stdin.resume()
+          process.stdin.setEncoding 'utf8'
 
-    if @config.stdin and not first
-      promise= new Promise (resolve)=>
-        process.stdin.resume()
-        process.stdin.setEncoding 'utf8'
+          data= ''
+          process.stdin.on 'data',(chunk)-> data+= chunk
+          process.stdin.on 'end',->
+            resolve data
 
-        data= ''
-        process.stdin.on 'data',(chunk)-> data+= chunk
-        process.stdin.on 'end',->
-          resolve data
+          process.stdin.on 'data',-> clearTimeout timeoutId
+          timeoutId= setTimeout (->resolve null),@stdinTimeout
+      else
+        Promise.resolve null
 
-        process.stdin.on 'data',-> clearTimeout timeoutId
-        timeoutId= setTimeout (->resolve null),@timeout
-    else
-      promise= Promise.resolve null
-
-    promise
-    .then (data)=>
+    stdin.then (data)=>
       process.stdin.pause()
 
+      firstArg= @args[0]
+
       return data if data?
-      return null unless first
+      return null unless firstArg
 
-      isUri= @args[0].match /^https?:\/\//
+      @args.shift() if @config.alignStaffArguments
+
+      isUri= firstArg.match /^https?:\/\//
       if isUri and @config.uri
-        uri= @args[0]
+        uri= firstArg
 
-        request uri
+        request uri,timeout:@config.uriTimeout
         .spread (response,body)->
           body
 
       else if @config.file
-        filePath= path.resolve process.cwd(),@args[0]
+        filePath= path.resolve process.cwd(),firstArg
 
-        readFile filePath,'utf8'
+        filePath+=
+          if not @config.fileExtension
+            ''
+          else
+            found= fs.existsSync path.resolve process.cwd(),filePath
+            shorthand= (path.basename filePath).match /^\w+$/
+
+            @config.fileExtension if not found and shorthand
+
+        readFileAsync filePath,'utf8'
 
       else
         null

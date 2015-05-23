@@ -1,6 +1,11 @@
 # Dependencies
 CommandFile= (require '../src').CommandFile
 
+# Environment
+stdinData= 'foo'
+file= 'test/fixture.txt'
+uri= 'http://static.edgy.black/fixture.txt'
+
 # Fixtures
 stdin= (data)->
   return unless data
@@ -15,56 +20,62 @@ command= (args...)->
 
 # Specs
 describe 'CommandFile',->
-  it 'shorthand',(done)->
-    stdin 'foo'
-    argv= command []
-
-    program= require '../src'
-    program.parse(argv).then (data)->
-
-      expect(data).toBe 'foo'
-      done()
-
-  describe 'All accepts',->
+  describe 'Accept',->
     it 'stdin', (done)->
-      stdin 'foo'
-      argv= command []
+      stdin stdinData
+      argv= command ['dostaff']
 
       program= new CommandFile
       program.parse(argv).then (data)->
 
-        expect(data).toEqual 'foo'
+        expect(data).toBe 'foo'
+        expect(program.args[0]).toBe 'dostaff'
         done()
 
     it 'file', (done)->
-      stdin ''
-      argv= command ['test/fixture.txt']
+      stdin null
+      argv= command [file,'dostaff']
 
       program= new CommandFile
       program.parse(argv).then (data)->
 
-        expect(data).toEqual 'bar'
+        expect(data).toBe 'bar'
+        expect(program.args[0]).toBe 'dostaff'
         done()
 
     it 'url', (done)->
-      stdin ''
-      argv= command ['http://static.edgy.black/fixture.txt']
+      stdin null
+      argv= command [uri,'dostaff']
 
       program= new CommandFile
       program.parse(argv).then (data)->
 
-        expect(data).toEqual 'baz\n'
+        expect(data).toBe 'baz\n'
+        expect(program.args[0]).toBe 'dostaff'
         done()
 
-  describe 'options',->
-    it 'timeout 1 sec', (done)->
-      stdin ''
-      argv= command ['https://static.edgy.black/fixture.txt']
+  describe 'Note',->
+    it 'Root is instanceof CommandFile',(done)->
+      stdin stdinData
+      argv= command ['dostaff']
 
-      program= new CommandFile
-      program.parse(argv).catch (error)->
+      program= require '../src'
+      program.parse(argv).then (data)->
 
-        expect(error instanceof Error).toBe true
+        expect(program instanceof CommandFile).toBe true
+        expect(data).toBe stdinData
+        expect(program.args[0]).toBe 'dostaff'
+        done()
+
+    it 'Default file extension ex: package -> package.json',(done)->
+      stdin null
+      argv= command ['package','dostaff']
+
+      program= new CommandFile fileExtension:'.json'
+      program.parse(argv).then (data)->
+
+        expect(data).toBeTruthy()
+        expect(program.args[0]).toBe 'dostaff'
         done()
 
     it 'All denny( ≈ commander)',(done)->
@@ -74,5 +85,5 @@ describe 'CommandFile',->
       program= new CommandFile {uri:off,file:off,stdin:off}
       program.parse(argv).then (data)->
 
-        expect(data).toEqual null
+        expect(data).toBe null
         done()

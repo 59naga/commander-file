@@ -1,7 +1,7 @@
 {
   "name": "commander-file",
-  "version": "0.0.0-alpha.1",
-  "description": "Wait the stdin/file/uri by extended commander",
+  "version": "0.0.0-alpha.2",
+  "description": "Receive stdin/file/uri at commander",
 
   "scripts": {
     "cover": "jasminetea test --verbose --cover --report --timeout 1000",
@@ -15,17 +15,16 @@
     "Npm update via Travis-CI":"",
       "prepublish": "npm run compile",
       
-      "precompile": "npm install coffee-script --global",
       "compile": "coffee --bare --compile index.coffee",
       "postcompile": "coffee --output lib --bare --compile src"
   },
   "config": {
     "ghooks": {
-      "pre-commit": "npm run cover"
+      "pre-commit": "#npm run cover"
     }
   },
+
   "files": [
-    ".npmignore",
     "index.js",
     "lib"
   ],

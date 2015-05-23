@@ -1,52 +1,45 @@
 # Commander file [![NPM version][npm-image]][npm] [![Build Status][travis-image]][travis] [![Coverage Status][coveralls-image]][coveralls]
 
-> Wait the stdin/file/uri by extended [commander.js](https://github.com/tj/commander.js)
+> Receive stdin/file/uri at [commander.js](https://github.com/tj/commander.js)
 
 ## Installation
 ```bash
 $ npm install commander-file
 ```
 
-# Upgrade option parsing
+* Fetching filedata after [parse](https://github.com/tj/commander.js#option-parsing).
+* Remove first argument unless stdin.
 
-my-program:
+Example:
+
 ```js
 #!/usr/bin/env node
 
 var program = require('commander-file');
 program
-.usage('[options] [file]')
+.usage('<stdin/file/url> dostaff [options...]')
 .parse(process.argv).then(function(fileData){
   console.log(fileData);
+  console.log(program.args[0]);
 });
 ```
 
-## Example
-
-__Can read stdin/file/url to `fileData`__.
-
-### Stdin
 ```bash
-$ echo -n 'foo' | node my-program
+# stdin
+$ echo -n 'foo' | node program dostaff
 # foo
-```
+# dostaff
 
-### File
-```bash
-$ echo -n 'bar' > bar.txt
-$ node my-program bar.txt
+# file
+$ node program bar.txt dostaff
 # bar
-```
+# dostaff
 
-> Parsing only first argument.
-
-### Uri
-```bash
-$ node my-program http://static.edgy.black/fixture.txt
+# uri
+$ node program http://example.com/baz.txt dostaff
 # baz
+# dostaff
 ```
-
-> Parsing only first argument.
 
 License
 ---
