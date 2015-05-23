@@ -13,7 +13,7 @@ class CommandFile extends Command
     super
 
     @config.stdin?= on
-    @config.stdinTimeout?= 500
+    @config.stdinTimeout?= 1000
 
     @config.file?= on
     @config.fileExtension?= ''
