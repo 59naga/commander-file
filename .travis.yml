@@ -11,6 +11,7 @@ node_js:
 
 # Npm publish options
 before_deploy:
+  - export BUILD_PASSED=true
   - npm install coffee-script --global
 deploy:
   provider: npm

@@ -13,7 +13,7 @@
       "test": "npm run cover",
 
     "Npm update via Travis-CI":"",
-      "prepublish": "if [ ${TRAVIS} = true ]; then npm run compile; fi",
+      "prepublish": "if [ ${BUILD_PASSED} = true ]; then npm run compile; fi",
       
       "compile": "coffee --bare --compile index.coffee",
       "postcompile": "coffee --output lib --bare --compile src"
