@@ -1,6 +1,6 @@
 {
   "name": "commander-file",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-beta.0",
   "description": "Receive stdin/file/uri at commander",
 
   "scripts": {
@@ -13,7 +13,7 @@
       "test": "npm run cover",
 
     "Npm update via Travis-CI":"",
-      "prepublish": "if [ '${TRAVIS}' = 'true' ]; then npm run compile; fi;",
+      "prepublish": "if [ ${TRAVIS} = true ]; then npm run compile; fi",
       
       "compile": "coffee --bare --compile index.coffee",
       "postcompile": "coffee --output lib --bare --compile src"
