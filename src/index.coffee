@@ -63,15 +63,15 @@ class CommandFile extends Command
       else if @config.file
         filePath= path.resolve process.cwd(),firstArg
 
+        found= fs.existsSync path.resolve process.cwd(),filePath
+        shorthand= (path.basename filePath).match /^\w+$/
+
         filePath+=
-          if not @config.fileExtension
-            ''
+          if shorthand and @config.fileExtension and not found
+            @config.fileExtension
           else
-            found= fs.existsSync path.resolve process.cwd(),filePath
-            shorthand= (path.basename filePath).match /^\w+$/
-
-            @config.fileExtension if not found and shorthand
-
+            ''
+        
         readFileAsync filePath,'utf8'
 
       else
