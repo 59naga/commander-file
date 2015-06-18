@@ -1,6 +1,6 @@
 {
   "name": "commander-file",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Receive file/uri and stdin at commander",
 
   "scripts": {
