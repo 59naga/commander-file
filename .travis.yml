@@ -10,7 +10,7 @@ node_js:
   - '0.10'
 
 # Npm publish options
-before_install:
+before_deploy:
   - 'npm install coffee-script --global'
 deploy:
   provider: npm
