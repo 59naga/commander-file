@@ -13,7 +13,6 @@ class CommandFile extends Command
     super
 
     @config.stdin?= on
-    @config.stdinTimeout?= 500
 
     @config.file?= on
     @config.fileExtension?= ''
@@ -21,24 +20,15 @@ class CommandFile extends Command
     @config.uri?= on
     @config.uriTimeout?= 0
 
-    @config.alignStaffArguments?= on
+    if @config.stdin
+      @option '-S, --stdin','use the stdin.'
 
   parse: ->
     super
 
     stdin=
-      if @config.stdin
-        new Promise (resolve)=>
-          process.stdin.resume()
-          process.stdin.setEncoding 'utf8'
-
-          data= ''
-          process.stdin.on 'data',(chunk)-> data+= chunk
-          process.stdin.on 'end',->
-            resolve data
-
-          process.stdin.on 'data',-> clearTimeout timeoutId
-          timeoutId= setTimeout (->resolve null),@config.stdinTimeout
+      if @stdin
+        @parseStdin()
       else
         Promise.resolve null
 
@@ -50,8 +40,6 @@ class CommandFile extends Command
       return data if data? and data.length
       return null unless firstArg
 
-      @args.shift() if @config.alignStaffArguments
-
       isUri= firstArg.match /^https?:\/\//
       if isUri and @config.uri
         uri= firstArg
@@ -61,21 +49,37 @@ class CommandFile extends Command
           body
 
       else if @config.file
-        filePath= path.resolve process.cwd(),firstArg
-
-        found= fs.existsSync path.resolve process.cwd(),filePath
-        shorthand= (path.basename filePath).match /^\w+$/
-
-        filePath+=
-          if shorthand and @config.fileExtension and not found
-            @config.fileExtension
-          else
-            ''
-        
-        readFileAsync filePath,'utf8'
+        @parseFile firstArg
 
       else
         null
+
+  parseStdin: ->
+    @args.unshift null
+    
+    new Promise (resolve)->
+      process.stdin.resume()
+      process.stdin.setEncoding 'utf8'
+
+      data= ''
+      process.stdin.on 'data',(chunk)->
+        data+= chunk
+      process.stdin.on 'end',->
+        resolve data
+
+  parseFile: (filename)->
+    filePath= path.resolve process.cwd(),filename
+
+    found= fs.existsSync path.resolve process.cwd(),filePath
+    shorthand= (path.basename filePath).match /^\w+$/
+
+    filePath+=
+      if shorthand and @config.fileExtension and not found
+        @config.fileExtension
+      else
+        ''
+    
+    readFileAsync filePath,'utf8'
 
 module.exports= new CommandFile
 module.exports.CommandFile= CommandFile

@@ -3,6 +3,11 @@ sudo: false
 cache:
   directories:
     - node_modules
+    - .nvm
+
+# Dependencies without test
+before_install:
+  - 'which coffee && coffee -v || npm install coffee-script --global'
 
 # Language options
 language: node_js
@@ -10,9 +15,6 @@ node_js:
   - '0.10'
 
 # Npm publish options
-before_deploy:
-  - export BUILD_PASSED=true
-  - npm install coffee-script --global
 deploy:
   provider: npm
   email: i59naga@icloud.com

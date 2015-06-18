@@ -10,6 +10,8 @@ uri= 'http://static.edgy.black/fixture.txt'
 stdin= (data)->
   return unless data
 
+  process.stdin.removeAllListeners
+
   process.nextTick ->
     process.stdin.emit 'data',data
     process.stdin.emit 'end'
@@ -23,13 +25,14 @@ describe 'CommandFile',->
   describe 'Accept',->
     it 'stdin', (done)->
       stdin stdinData
-      argv= command ['dostaff']
+      argv= command ['-S','dostaff']
 
       program= new CommandFile
       program.parse(argv).then (data)->
 
         expect(data).toBe 'foo'
-        expect(program.args[0]).toBe 'dostaff'
+        expect(program.args[0]).toBe null
+        expect(program.args[1]).toBe 'dostaff'
         done()
 
     it 'file', (done)->
@@ -40,7 +43,8 @@ describe 'CommandFile',->
       program.parse(argv).then (data)->
 
         expect(data).toBe 'bar'
-        expect(program.args[0]).toBe 'dostaff'
+        expect(program.args[0]).toBe file
+        expect(program.args[1]).toBe 'dostaff'
         done()
 
     it 'url', (done)->
@@ -51,23 +55,25 @@ describe 'CommandFile',->
       program.parse(argv).then (data)->
 
         expect(data).toBe 'baz\n'
-        expect(program.args[0]).toBe 'dostaff'
+        expect(program.args[0]).toBe uri
+        expect(program.args[1]).toBe 'dostaff'
         done()
 
   describe 'Note',->
     it 'Root is instanceof CommandFile',(done)->
       stdin stdinData
-      argv= command ['dostaff']
+      argv= command ['-S','dostaff']
 
       program= require '../src'
       program.parse(argv).then (data)->
 
         expect(program instanceof CommandFile).toBe true
         expect(data).toBe stdinData
-        expect(program.args[0]).toBe 'dostaff'
+        expect(program.args[0]).toBe null
+        expect(program.args[1]).toBe 'dostaff'
         done()
 
-    it 'Default file extension ex: package -> package.json',(done)->
+    it 'Default extension is ".json" ex: package -> package.json',(done)->
       stdin null
       argv= command ['package','dostaff']
 
@@ -75,7 +81,8 @@ describe 'CommandFile',->
       program.parse(argv).then (data)->
 
         expect(data).toBeTruthy()
-        expect(program.args[0]).toBe 'dostaff'
+        expect(program.args[0]).toBe 'package'
+        expect(program.args[1]).toBe 'dostaff'
         done()
 
     it 'All denny( ≈ commander)',(done)->

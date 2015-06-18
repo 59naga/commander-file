@@ -1,33 +1,21 @@
 {
   "name": "commander-file",
-  "version": "0.0.1",
-  "description": "Receive stdin/file/uri at commander",
+  "version": "0.0.2-alpha",
+  "description": "Receive file/uri and stdin at commander",
 
   "scripts": {
-    "cover": "jasminetea test --verbose --cover --report --timeout 2000",
+    "start": "jasminetea --watch",
+    "test": "jasminetea --cover --report --lint",
 
-    "Developer commands":"",
-      "start": "$(jqn package scripts.cover) --watch",
-
-    "Travis-CI commands":"",
-      "test": "npm run cover",
-
-    "Npm update via Travis-CI":"",
-      "prepublish": "if [ ${BUILD_PASSED} = true ]; then npm run compile; fi",
-      
-      "compile": "coffee --bare --compile index.coffee",
-      "postcompile": "coffee --output lib --bare --compile src"
+    "prepublish": "node -e \"if(process.env.TRAVIS){}else{process.exit(1)}\" && npm run compile || echo skip prepublish",
+    "compile": "coffee --bare --compile index.coffee",
+    "postcompile": "coffee --output lib --bare --compile src"
   },
   "config": {
     "ghooks": {
-      "pre-commit": "npm run cover"
+      "pre-commit": "npm run test"
     }
   },
-
-  "files": [
-    "index.js",
-    "lib"
-  ],
 
   "dependencies": {
     "bluebird": "^2.9.25",
@@ -35,23 +23,20 @@
     "request": "^2.55.0"
   },
   "devDependencies": {
-    "coffee-script": "^1.9.2",
     "ghooks": "^0.3.2",
-    "jasminetea": "^0.1.30-rc.3",
-    "jqn": "0.0.3"
+    "jasminetea": "^0.2.1-alpha.2"
+  },
+  "extraDependencies": {
+    "coffee-script": "^1.9.3"
   },
 
   "keywords": [
     "commander",
     "promise",
-    "stdin",
     "file",
-    "url"
+    "url",
+    "stdin"
   ],
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  },
 
   "author": "59naga <i59naga@icloud.com> (http://berabou.me/)",
   "license": "MIT",

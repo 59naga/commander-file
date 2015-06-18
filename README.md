@@ -1,43 +1,57 @@
 # Commander file [![NPM version][npm-image]][npm] [![Build Status][travis-image]][travis] [![Coverage Status][coveralls-image]][coveralls]
 
-> Receive stdin/file/uri at [commander.js](https://github.com/tj/commander.js)
+> Receive file/uri and stdin at [commander.js](https://github.com/tj/commander.js)
 
 ## Installation
 ```bash
 $ npm install commander-file
 ```
 
-* Fetching filedata after [parse](https://github.com/tj/commander.js#option-parsing).
-* Remove first argument unless stdin.
+* Fetch data after [parse](https://github.com/tj/commander.js#option-parsing) via first argument or `--stdin`.
+* First argument always return the file.
 
-Example:
+# Usage
+
+program.js
 
 ```js
 #!/usr/bin/env node
 
 var program = require('commander-file');
 program
-.usage('<stdin/file/url> dostaff [options...]')
-.parse(process.argv).then(function(fileData){
-  console.log(fileData);
+.usage('<file/url> dostaff [options...]')
+.parse(process.argv).then(function(data){
+  console.log(data);
   console.log(program.args[0]);
+  console.log(program.args[1]);
 });
 ```
 
 ```bash
+$ node program.js --help
+#
+#  Usage: program <file/url> dostaff [options...]
+#
+#  Options:
+#
+#    -h, --help   output usage information
+#    -S, --stdin  use the stdin.
+
 # stdin
-$ echo -n 'foo' | node program dostaff
+$ echo -n 'foo' | node program.js --stdin dostaff
 # foo
+# null
 # dostaff
 
-# file
-$ node program bar.txt dostaff
+$ node program.js bar.txt dostaff
 # bar
+# bar.txt
 # dostaff
 
 # uri
-$ node program http://example.com/baz.txt dostaff
+$ node program.js http://example.com/baz.txt dostaff
 # baz
+# http://example.com/baz.txt
 # dostaff
 ```
 
