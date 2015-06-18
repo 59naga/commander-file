@@ -2,23 +2,22 @@
 
 > Receive file/uri and stdin at [commander.js](https://github.com/tj/commander.js)
 
-## Installation
-```bash
-$ npm install commander-file
-```
-
 * Fetch data after [parse](https://github.com/tj/commander.js#option-parsing) via first argument or `--stdin`.
 * First argument always return the file.
 
 # Usage
+```bash
+$ npm install commander-file --save
+```
 
-program.js
+./program.js
 
 ```js
 #!/usr/bin/env node
 
 var program = require('commander-file');
 program
+.version('0.0.0')
 .usage('<file/url> dostaff [options...]')
 .parse(process.argv).then(function(data){
   console.log(data);
@@ -34,8 +33,9 @@ $ node program.js --help
 #
 #  Options:
 #
-#    -h, --help   output usage information
-#    -S, --stdin  use the stdin.
+#    -h, --help     output usage information
+#    -S, --stdin    use the stdin
+#    -V, --version  output the version number
 
 # stdin
 $ echo -n 'foo' | node program.js --stdin dostaff

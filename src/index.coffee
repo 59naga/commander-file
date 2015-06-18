@@ -21,7 +21,7 @@ class CommandFile extends Command
     @config.uriTimeout?= 0
 
     if @config.stdin
-      @option '-S, --stdin','use the stdin.'
+      @option '-S, --stdin','use the stdin'
 
   parse: ->
     super

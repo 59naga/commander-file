@@ -1,11 +1,11 @@
 {
   "name": "commander-file",
-  "version": "0.0.2-alpha",
+  "version": "0.0.2",
   "description": "Receive file/uri and stdin at commander",
 
   "scripts": {
     "start": "jasminetea --watch",
-    "test": "jasminetea --cover --report --lint",
+    "test": "jasminetea --cover --report --lint --timeout 2000",
 
     "prepublish": "node -e \"if(process.env.TRAVIS){}else{process.exit(1)}\" && npm run compile || echo skip prepublish",
     "compile": "coffee --bare --compile index.coffee",
